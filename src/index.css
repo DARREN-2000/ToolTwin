@@ -1,26 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap');
 @import "tailwindcss";
 
-/* THESE ARE PLACEHOLDER FOR EMPTY APP, FEEL FREE TO REPLACE WITH DESIRED DESIGN */
-
 @theme {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --color-text-muted: oklch(0.9015 0.0154 241.79);
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --color-primary: oklch(0.2077 0.0398 265.75);
+  --color-on-primary: oklch(1.0 0 0);
+  --color-secondary: oklch(0.2795 0.0368 260.03);
+  --color-accent: oklch(0.7227 0.192 149.58);
+  --color-background: oklch(0.1288 0.0406 264.7);
+  --color-foreground: oklch(0.9842 0.0034 247.86);
+  --color-muted: oklch(0.2396 0.0332 273.5);
+  --color-border: oklch(0.3717 0.0392 257.29);
+  --color-destructive: oklch(0.6368 0.2078 25.33);
+  --color-ring: oklch(0.2077 0.0398 265.75);
 }
 
-.bg-dotgrid-glow {
-  background-color: oklch(0.1638 0 0);
-  background-image:
-    radial-gradient(
-      circle at 50% 118%,
-      oklch(0.41 0.14 250 / 45%) 0%,
-      oklch(0.41 0.14 250 / 22%) 22%,
-      oklch(0.41 0.14 250 / 10%) 32%,
-      oklch(0.41 0.14 250 / 4%) 38%,
-      transparent 45%
-    ),
-    radial-gradient(oklch(0.41 0.14 250 / 4%) 1px, transparent 1px);
-  background-size:
-    100% 100%,
-    16px 16px;
-  background-position: center, center;
+/* Risk level colors */
+.risk-low { @apply text-accent bg-accent/10; }
+.risk-medium { @apply text-yellow-400 bg-yellow-400/10; }
+.risk-high { @apply text-orange-400 bg-orange-400/10; }
+.risk-critical { @apply text-destructive bg-destructive/10; }
+
+.badge-risk-low { @apply bg-accent/15 text-accent border border-accent/30; }
+.badge-risk-medium { @apply bg-yellow-400/15 text-yellow-400 border border-yellow-400/30; }
+.badge-risk-high { @apply bg-orange-400/15 text-orange-400 border border-orange-400/30; }
+.badge-risk-critical { @apply bg-destructive/15 text-destructive border border-destructive/30; }
+
+/* Status badge colors */
+.badge-proposed { @apply bg-blue-400/15 text-blue-400 border border-blue-400/30; }
+.badge-simulating { @apply bg-purple-400/15 text-purple-400 border border-purple-400/30; }
+.badge-simulated { @apply bg-purple-400/15 text-purple-400 border border-purple-400/30; }
+.badge-pending-review { @apply bg-yellow-400/15 text-yellow-400 border border-yellow-400/30; }
+.badge-approved { @apply bg-accent/15 text-accent border border-accent/30; }
+.badge-blocked { @apply bg-destructive/15 text-destructive border border-destructive/30; }
+.badge-executed { @apply bg-blue-400/15 text-blue-400 border border-blue-400/30; }
+.badge-verified { @apply bg-accent/15 text-accent border border-accent/30; }
+.badge-discrepancy { @apply bg-orange-400/15 text-orange-400 border border-orange-400/30; }
+
+/* Smooth transitions */
+* {
+  @apply transition-colors duration-150 ease-out;
+}
+
+/* Focus styles */
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-ring;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-muted);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.45 0.04 257);
+}
+
+/* XYFlow overrides for dark theme */
+.react-flow__node {
+  font-family: var(--font-sans);
+}
+.react-flow__controls button {
+  @apply bg-muted border-border text-foreground;
+}
+.react-flow__controls button:hover {
+  @apply bg-secondary;
+}
+.react-flow__minimap {
+  @apply bg-muted !important;
+}
+.react-flow__attribution {
+  @apply hidden;
 }
