@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Activity, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -20,7 +21,9 @@ export default function LoginPage() {
     setLoading(false);
     if (err) {
       setError(err);
+      toast.error(err);
     } else {
+      toast.success("Successfully signed in!");
       navigate("/");
     }
   };

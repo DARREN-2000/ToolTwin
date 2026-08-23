@@ -75,7 +75,7 @@
   @apply bg-secondary;
 }
 .react-flow__minimap {
-  @apply bg-muted !important;
+  @apply bg-muted;
 }
 .react-flow__attribution {
   @apply hidden;

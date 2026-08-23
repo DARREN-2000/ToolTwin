@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth, type UserRole } from "../hooks/useAuth";
 import { Activity, Mail, Lock, User, ChevronDown } from "lucide-react";
+import toast from "react-hot-toast";
 
 const roles: { value: UserRole; label: string }[] = [
   { value: "operator", label: "Operator" },
@@ -30,8 +31,9 @@ export default function SignupPage() {
     setLoading(false);
     if (err) {
       setError(err);
+      toast.error(err);
     } else {
-      setSuccess("Account created! You can now sign in.");
+      toast.success("Account created! You can now sign in.");
       setTimeout(() => navigate("/login"), 2000);
     }
   };
