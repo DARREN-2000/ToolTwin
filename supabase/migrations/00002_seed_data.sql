@@ -8,21 +8,21 @@
 
 -- Tools Catalog
 INSERT INTO public.tools (id, name, description, parameters, target_entity, is_destructive, dependencies) VALUES
-(uuid_generate_v4(), 'delete_customer', 'Deletes a customer and all their associated data', '{"type": "object", "properties": {"customer_id": {"type": "string"}}, "required": ["customer_id"]}', 'customers', true, '[{"entity_type": "orders", "relationship": "one_to_many"}]'),
-(uuid_generate_v4(), 'anonymize_customer', 'Anonymizes customer PII but preserves transactional history', '{"type": "object", "properties": {"customer_id": {"type": "string"}}, "required": ["customer_id"]}', 'customers', false, '[]');
+(gen_random_uuid(), 'delete_customer', 'Deletes a customer and all their associated data', '{"type": "object", "properties": {"customer_id": {"type": "string"}}, "required": ["customer_id"]}', 'customers', true, '[{"entity_type": "orders", "relationship": "one_to_many"}]'),
+(gen_random_uuid(), 'anonymize_customer', 'Anonymizes customer PII but preserves transactional history', '{"type": "object", "properties": {"customer_id": {"type": "string"}}, "required": ["customer_id"]}', 'customers', false, '[]');
 
 -- Dependency Edges
 INSERT INTO public.dependency_edges (id, source_entity, source_field, target_entity, target_field, relationship_type) VALUES
-(uuid_generate_v4(), 'customers', 'id', 'orders', 'customer_id', 'one_to_many_cascade'),
-(uuid_generate_v4(), 'orders', 'id', 'payments', 'order_id', 'one_to_many_cascade'),
-(uuid_generate_v4(), 'customers', 'id', 'support_tickets', 'customer_id', 'one_to_many_cascade'),
-(uuid_generate_v4(), 'customers', 'id', 'analytics_aggregates', 'dimension_value', 'aggregate_corrupt');
+(gen_random_uuid(), 'customers', 'id', 'orders', 'customer_id', 'one_to_many_cascade'),
+(gen_random_uuid(), 'orders', 'id', 'payments', 'order_id', 'one_to_many_cascade'),
+(gen_random_uuid(), 'customers', 'id', 'support_tickets', 'customer_id', 'one_to_many_cascade'),
+(gen_random_uuid(), 'customers', 'id', 'analytics_aggregates', 'dimension_value', 'aggregate_corrupt');
 
 -- Policies
 INSERT INTO public.policies (id, name, description, rule_type, rule_config, severity) VALUES
-(uuid_generate_v4(), 'Data Retention Policy', 'Preserve customer records for 7 years after last activity or if historical orders exist', 'retention', '{"entity": "customers", "condition": "last_active > now() - interval ''7 years'' OR has_orders = true", "action": "BLOCK"}', 'CRITICAL'),
-(uuid_generate_v4(), 'Financial Integrity Policy', 'Block actions that corrupt payment records', 'integrity', '{"entity": "payments", "condition": "is_deleted = true", "action": "BLOCK"}', 'CRITICAL'),
-(uuid_generate_v4(), 'GDPR Compliance Policy', 'Recommend anonymization when blocking deletion', 'compliance', '{"entity": "customers", "action": "RECOMMEND_ALTERNATIVE", "alternative": "anonymize_customer"}', 'MEDIUM');
+(gen_random_uuid(), 'Data Retention Policy', 'Preserve customer records for 7 years after last activity or if historical orders exist', 'retention', '{"entity": "customers", "condition": "last_active > now() - interval ''7 years'' OR has_orders = true", "action": "BLOCK"}', 'CRITICAL'),
+(gen_random_uuid(), 'Financial Integrity Policy', 'Block actions that corrupt payment records', 'integrity', '{"entity": "payments", "condition": "is_deleted = true", "action": "BLOCK"}', 'CRITICAL'),
+(gen_random_uuid(), 'GDPR Compliance Policy', 'Recommend anonymization when blocking deletion', 'compliance', '{"entity": "customers", "action": "RECOMMEND_ALTERNATIVE", "alternative": "anonymize_customer"}', 'MEDIUM');
 
 -- Acme Commerce Seed Data
 INSERT INTO acme.customers (id, name, email, phone, status, last_active, created_at) VALUES

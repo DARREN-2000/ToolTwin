@@ -16,7 +16,7 @@ CREATE TYPE risk_level_enum AS ENUM ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL');
 CREATE TYPE verification_status_enum AS ENUM ('PENDING', 'VERIFIED', 'DISCREPANCY');
 
 CREATE TABLE public.action_proposals (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   status action_status NOT NULL DEFAULT 'PROPOSED',
   proposed_by uuid REFERENCES auth.users(id),
   reviewed_by uuid REFERENCES auth.users(id),
@@ -28,14 +28,14 @@ CREATE TABLE public.action_proposals (
 );
 
 CREATE TABLE public.world_snapshots (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   proposal_id uuid REFERENCES public.action_proposals(id),
   snapshot_data jsonb NOT NULL,
   created_at timestamptz DEFAULT now()
 );
 
 CREATE TABLE public.simulation_results (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   proposal_id uuid REFERENCES public.action_proposals(id),
   snapshot_id uuid REFERENCES public.world_snapshots(id),
   affected_entities jsonb NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE public.simulation_results (
 );
 
 CREATE TABLE public.execution_results (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   proposal_id uuid REFERENCES public.action_proposals(id),
   executed_action jsonb NOT NULL,
   response jsonb,
@@ -63,7 +63,7 @@ CREATE TABLE public.execution_results (
 );
 
 CREATE TABLE public.policies (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name text NOT NULL,
   description text,
   rule_type text NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE public.policies (
 );
 
 CREATE TABLE public.tools (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name text UNIQUE NOT NULL,
   description text,
   parameters jsonb NOT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE public.tools (
 );
 
 CREATE TABLE public.dependency_edges (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   source_entity text NOT NULL,
   source_field text NOT NULL,
   target_entity text NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE public.dependency_edges (
 );
 
 CREATE TABLE public.audit_log (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   proposal_id uuid REFERENCES public.action_proposals(id),
   event_type text NOT NULL,
   event_data jsonb NOT NULL,
