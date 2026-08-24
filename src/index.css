@@ -16,6 +16,13 @@
   --color-border: oklch(0.3717 0.0392 257.29);
   --color-destructive: oklch(0.6368 0.2078 25.33);
   --color-ring: oklch(0.2077 0.0398 265.75);
+  
+  --animate-shimmer: shimmer 1.5s infinite;
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
 }
 
 /* Risk level colors */
