@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const LandingPage: React.FC = () => {
   return (
@@ -27,7 +28,7 @@ const LandingPage: React.FC = () => {
           <div className="hidden md:flex space-x-8 text-sm text-gray-400">
             <a href="#features" className="hover:text-white transition-colors">Features</a>
             <a href="#docs" className="hover:text-white transition-colors">Documentation</a>
-            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+            <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
           </div>
           <div className="flex space-x-4">
             <button className="text-sm font-medium text-gray-300 hover:text-white transition">Sign In</button>

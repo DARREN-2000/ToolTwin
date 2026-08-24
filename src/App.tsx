@@ -12,6 +12,7 @@ import AuditLog from "./pages/AuditLog";
 import PolicyManager from "./pages/PolicyManager";
 import ToolCatalog from "./pages/ToolCatalog";
 import IntegrationSettings from "./pages/IntegrationSettings";
+import Pricing from "./pages/Pricing";
 import { RequireAuth } from "./hooks/useRequireAuth";
 import { AuthProvider } from "./hooks/useAuth";
 
@@ -22,6 +23,7 @@ export default function App() {
         <Toaster position="top-right" />
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
 
