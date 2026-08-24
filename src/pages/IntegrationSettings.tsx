@@ -190,7 +190,7 @@ const response = await client.chat.completions.create({
                       {'  '}model: <span className="text-green-300">"gpt-4"</span>,{'\n'}
                       {'  '}messages: [{'{'} role: <span className="text-green-300">"user"</span>, content: <span className="text-green-300">"Delete all inactive customers"</span> {'}'}],{'\n'}
                       {'  '}tools: myDatabaseTools{'\n'}
-                      });
+                      {'});'}
                     </code>
                   </pre>
                 </div>

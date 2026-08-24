@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ArrowUpRight, ArrowDownRight, Users, DollarSign, Activity, Zap } from 'lucide-react';
+import OnboardingModal from '../components/OnboardingModal';
 
 const data = [
   { name: 'Mon', value: 4000 },
@@ -13,8 +14,22 @@ const data = [
 ];
 
 export default function Dashboard() {
+  const [showTour, setShowTour] = useState(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem('tour_completed')) {
+      setShowTour(true);
+    }
+  }, []);
+
+  const handleCloseTour = () => {
+    localStorage.setItem('tour_completed', 'true');
+    setShowTour(false);
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white p-8 font-sans">
+      {showTour && <OnboardingModal onClose={handleCloseTour} />}
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header */}
