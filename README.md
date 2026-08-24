@@ -1,23 +1,56 @@
-# 👯 ToolTwin
+<div align="center">
+  <h1>👯 ToolTwin</h1>
+  <p><strong>The Ultimate Digital Twin Framework for Developer Tools and APIs</strong></p>
 
-> **The Ultimate Digital Twin Framework for Developer Tools and APIs**
+  <p>
+    <a href="https://github.com/tooltwin/tooltwin/actions"><img src="https://img.shields.io/github/actions/workflow/status/tooltwin/tooltwin/ci.yml?style=flat-square" alt="Build Status"></a>
+    <a href="https://www.npmjs.com/package/tooltwin"><img src="https://img.shields.io/npm/v/tooltwin?style=flat-square" alt="NPM Version"></a>
+    <a href="https://hub.docker.com/r/tooltwin/core"><img src="https://img.shields.io/docker/pulls/tooltwin/core?style=flat-square" alt="Docker Pulls"></a>
+    <a href="https://github.com/tooltwin/tooltwin/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="License"></a>
+  </p>
+</div>
 
-ToolTwin is a powerful, lightweight framework that allows you to create high-fidelity digital twins of your APIs, CLI tools, and microservices. Whether you're mocking complex stateful systems for testing, or simulating edge-case behaviors without affecting production, ToolTwin gives you the control you need.
+ToolTwin is a powerful, lightweight framework for creating **high-fidelity digital twins** of your APIs, CLI tools, and microservices. 
+
+Stop wrestling with fragile mocks and brittle test environments. ToolTwin gives you production-grade simulation capabilities—allowing you to mock complex stateful systems for testing or inject edge-case faults without ever touching production.
+
+## ✨ Why ToolTwin?
+
+- **Stateful by Default:** Simulate real database and memory states effortlessly. No more stateless, dumb mocks.
+- **Protocol Agnostic:** Seamlessly supports REST, GraphQL, gRPC, and standard streams (stdin/stdout).
+- **Time-Travel Debugging:** Rewind, inspect, and replay tool interactions with surgical precision.
+- **Zero-Config Developer Experience:** Get started instantly with intelligent defaults. Just define your initial state and go.
 
 ---
 
-## 🌟 Features
+## 🚀 Quick Start
 
-- **Stateful Mocking:** Simulate real database and memory states effortlessly.
-- **Protocol Agnostic:** Supports REST, GraphQL, gRPC, and standard streams (stdin/stdout).
-- **Time-Travel Debugging:** Rewind and replay tool interactions.
-- **Zero Configuration:** Get started instantly with intelligent defaults.
+Get your first digital twin running in under 60 seconds.
+
+### 1. Install
+
+Pick your preferred package manager or container runtime:
+
+```bash
+# npm (Node.js)
+npm install -g tooltwin
+
+# Homebrew (macOS/Linux)
+brew install tooltwin/tap/tooltwin
+
+# Docker
+docker pull tooltwin/core:latest
+docker run -p 8080:8080 tooltwin/core
+```
+
+> [!TIP]
+> **Production or CI/CD?** We strongly recommend using the Docker image for deterministic, isolated test runs in your pipelines.
 
 ---
 
 ## 🏗 Architecture
 
-ToolTwin uses an event-driven architecture to intercept requests and simulate state transitions through a highly concurrent twin engine.
+ToolTwin intercepts requests via an event-driven gateway and simulates state transitions through a highly concurrent twin engine.
 
 ```mermaid
 graph TD
@@ -43,39 +76,16 @@ graph TD
 
 ---
 
-## 🚀 Installation
+## 📚 API Reference
 
-You can install ToolTwin via standard package managers.
+ToolTwin exposes a robust control-plane API, allowing you to orchestrate and mutate your digital twins dynamically during test execution.
 
-### Using npm (Node.js)
-```bash
-npm install -g tooltwin
-```
+### Create a Twin
+`POST /api/v1/twins`
 
-### Using Homebrew (macOS/Linux)
-```bash
-brew install tooltwin/tap/tooltwin
-```
+Instantiate a new digital twin with an initial state.
 
-### Using Docker
-```bash
-docker pull tooltwin/core:latest
-docker run -p 8080:8080 tooltwin/core
-```
-
-> [!TIP]
-> For CI/CD environments, we recommend using the Docker image to ensure complete environment isolation.
-
----
-
-## 📚 API Documentation
-
-ToolTwin exposes a control-plane API to manage your digital twins on the fly.
-
-### `POST /api/v1/twins`
-Create a new digital twin instance.
-
-**Request Body:**
+**Request:**
 ```json
 {
   "name": "payment-gateway-twin",
@@ -96,8 +106,10 @@ Create a new digital twin instance.
 }
 ```
 
-### `GET /api/v1/twins/:id/state`
-Retrieve the current state of a digital twin.
+### Inspect State
+`GET /api/v1/twins/:id/state`
+
+Snapshot the current state of a running digital twin.
 
 **Response (`200 OK`):**
 ```json
@@ -111,10 +123,12 @@ Retrieve the current state of a digital twin.
 }
 ```
 
-### `PUT /api/v1/twins/:id/scenario`
-Load a specific testing scenario or fault injection into the twin.
+### Inject Scenarios
+`PUT /api/v1/twins/:id/scenario`
 
-**Request Body:**
+Dynamically load testing scenarios, latency spikes, or fault injections.
+
+**Request:**
 ```json
 {
   "scenario": "latency-spike",
@@ -126,14 +140,14 @@ Load a specific testing scenario or fault injection into the twin.
 ```
 
 > [!WARNING]
-> Fault injections are applied immediately. Ensure your test suites are prepared to handle simulated latency and errors.
+> **Immediate Execution:** Fault injections apply instantaneously. Ensure your test suites are engineered to handle the simulated network turbulence or errors.
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+We're building the future of developer tool simulation, and we'd love your help! See our [Contributing Guide](CONTRIBUTING.md) to get started.
 
 ## 📄 License
 
-ToolTwin is MIT licensed. See the [LICENSE](LICENSE) file for details.
+ToolTwin is open-source software licensed under the [MIT License](LICENSE).
