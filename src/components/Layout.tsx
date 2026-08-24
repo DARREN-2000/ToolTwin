@@ -14,6 +14,7 @@ import {
   LogOut,
   Activity,
   Search,
+  Puzzle,
 } from "lucide-react";
 
 const navItems = [
@@ -23,6 +24,7 @@ const navItems = [
   { to: "/app/audit", label: "Audit Log", icon: ScrollText, roles: ["auditor", "admin"] },
   { to: "/app/policies", label: "Policies", icon: ShieldCheck, roles: ["admin"] },
   { to: "/app/tools", label: "Tool Catalog", icon: Wrench, roles: ["operator", "approver", "auditor", "admin"] },
+  { to: "/app/settings", label: "Integration & Settings", icon: Puzzle, roles: ["admin"] },
 ];
 
 export default function Layout() {

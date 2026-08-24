@@ -11,6 +11,7 @@ import ReviewQueue from "./pages/ReviewQueue";
 import AuditLog from "./pages/AuditLog";
 import PolicyManager from "./pages/PolicyManager";
 import ToolCatalog from "./pages/ToolCatalog";
+import IntegrationSettings from "./pages/IntegrationSettings";
 import { RequireAuth } from "./hooks/useRequireAuth";
 import { AuthProvider } from "./hooks/useAuth";
 
@@ -63,6 +64,14 @@ export default function App() {
               element={
                 <RequireAuth roles={["admin"]}>
                   <PolicyManager />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="settings"
+              element={
+                <RequireAuth roles={["admin"]}>
+                  <IntegrationSettings />
                 </RequireAuth>
               }
             />
