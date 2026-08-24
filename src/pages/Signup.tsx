@@ -33,8 +33,8 @@ export default function SignupPage() {
       setError(err);
       toast.error(err);
     } else {
-      toast.success("Account created! You can now sign in.");
-      setTimeout(() => navigate("/login"), 2000);
+      toast.success("Account created successfully!");
+      navigate("/app");
     }
   };
 
@@ -48,9 +48,7 @@ export default function SignupPage() {
           <h1 className="text-2xl font-heading font-bold text-foreground">
             ToolTwin
           </h1>
-          <p className="text-sm text-foreground/50 mt-1">
-            Create your account
-          </p>
+          <p className="text-sm text-foreground/50 mt-1">Create your account</p>
         </div>
 
         <form

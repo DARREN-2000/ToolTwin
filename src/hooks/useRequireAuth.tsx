@@ -24,7 +24,7 @@ export function RequireAuth({
   }
 
   if (roles && profile && !roles.includes(profile.role)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/app" replace />;
   }
 
   return <>{children}</>;

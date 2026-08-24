@@ -1,11 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans:
+    "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading:
+    "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --color-primary: oklch(0.2077 0.0398 265.75);
-  --color-on-primary: oklch(1.0 0 0);
+  --color-on-primary: oklch(1 0 0);
   --color-secondary: oklch(0.2795 0.0368 260.03);
   --color-accent: oklch(0.7227 0.192 149.58);
   --color-background: oklch(0.1288 0.0406 264.7);
@@ -17,26 +19,60 @@
 }
 
 /* Risk level colors */
-.risk-low { @apply text-accent bg-accent/10; }
-.risk-medium { @apply text-yellow-400 bg-yellow-400/10; }
-.risk-high { @apply text-orange-400 bg-orange-400/10; }
-.risk-critical { @apply text-destructive bg-destructive/10; }
+.risk-low {
+  @apply text-accent bg-accent/10;
+}
+.risk-medium {
+  @apply text-yellow-400 bg-yellow-400/10;
+}
+.risk-high {
+  @apply text-orange-400 bg-orange-400/10;
+}
+.risk-critical {
+  @apply text-destructive bg-destructive/10;
+}
 
-.badge-risk-low { @apply bg-accent/15 text-accent border border-accent/30; }
-.badge-risk-medium { @apply bg-yellow-400/15 text-yellow-400 border border-yellow-400/30; }
-.badge-risk-high { @apply bg-orange-400/15 text-orange-400 border border-orange-400/30; }
-.badge-risk-critical { @apply bg-destructive/15 text-destructive border border-destructive/30; }
+.badge-risk-low {
+  @apply bg-accent/15 text-accent border border-accent/30;
+}
+.badge-risk-medium {
+  @apply bg-yellow-400/15 text-yellow-400 border border-yellow-400/30;
+}
+.badge-risk-high {
+  @apply bg-orange-400/15 text-orange-400 border border-orange-400/30;
+}
+.badge-risk-critical {
+  @apply bg-destructive/15 text-destructive border border-destructive/30;
+}
 
 /* Status badge colors */
-.badge-proposed { @apply bg-blue-400/15 text-blue-400 border border-blue-400/30; }
-.badge-simulating { @apply bg-purple-400/15 text-purple-400 border border-purple-400/30; }
-.badge-simulated { @apply bg-purple-400/15 text-purple-400 border border-purple-400/30; }
-.badge-pending-review { @apply bg-yellow-400/15 text-yellow-400 border border-yellow-400/30; }
-.badge-approved { @apply bg-accent/15 text-accent border border-accent/30; }
-.badge-blocked { @apply bg-destructive/15 text-destructive border border-destructive/30; }
-.badge-executed { @apply bg-blue-400/15 text-blue-400 border border-blue-400/30; }
-.badge-verified { @apply bg-accent/15 text-accent border border-accent/30; }
-.badge-discrepancy { @apply bg-orange-400/15 text-orange-400 border border-orange-400/30; }
+.badge-proposed {
+  @apply bg-blue-400/15 text-blue-400 border border-blue-400/30;
+}
+.badge-simulating {
+  @apply bg-purple-400/15 text-purple-400 border border-purple-400/30;
+}
+.badge-simulated {
+  @apply bg-purple-400/15 text-purple-400 border border-purple-400/30;
+}
+.badge-pending-review {
+  @apply bg-yellow-400/15 text-yellow-400 border border-yellow-400/30;
+}
+.badge-approved {
+  @apply bg-accent/15 text-accent border border-accent/30;
+}
+.badge-blocked {
+  @apply bg-destructive/15 text-destructive border border-destructive/30;
+}
+.badge-executed {
+  @apply bg-blue-400/15 text-blue-400 border border-blue-400/30;
+}
+.badge-verified {
+  @apply bg-accent/15 text-accent border border-accent/30;
+}
+.badge-discrepancy {
+  @apply bg-orange-400/15 text-orange-400 border border-orange-400/30;
+}
 
 /* Smooth transitions */
 * {

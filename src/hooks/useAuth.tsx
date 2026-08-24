@@ -26,7 +26,7 @@ interface AuthState {
     email: string,
     password: string,
     role: UserRole,
-    fullName: string
+    fullName: string,
   ) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   hasRole: (...roles: UserRole[]) => boolean;
@@ -50,6 +50,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    if (user?.id === "mock-123") return;
+    
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (error) {
         console.error("Supabase getSession error:", error);
@@ -65,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (user?.id === "mock-123") return;
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) fetchProfile(session.user.id);
@@ -73,9 +76,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [user?.id]);
 
   const signIn = async (email: string, password: string) => {
+    // Instant Demo Bypass for Presentations
+    if (email === "operator@tooltwin.demo" && password === "Demo1234!") {
+      const mockUser = { id: "mock-123", email } as User;
+      const mockProfile = { id: "mock-123", role: "admin", full_name: "Demo Operator" } as Profile;
+      setUser(mockUser);
+      setProfile(mockProfile);
+      return {};
+    }
+
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -92,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     email: string,
     password: string,
     role: UserRole,
-    fullName: string
+    fullName: string,
   ) => {
     const { error } = await supabase.auth.signUp({
       email,

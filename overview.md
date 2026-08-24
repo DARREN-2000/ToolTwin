@@ -30,7 +30,7 @@ This is enterprise AI infrastructure: the architecture separates action proposal
 
 1. **Operator** opens the Action Console and clicks "New Proposal."
 2. The system prompts the LLM (via OpenRouter) with Acme Commerce context and the tool catalog. The LLM proposes an action with reasoning.
-3. The proposal appears: `delete_customer(customer_id="CUS-10482")` — *"Customer has been inactive for 5 years."*
+3. The proposal appears: `delete_customer(customer_id="CUS-10482")` — _"Customer has been inactive for 5 years."_
 4. Operator reviews the proposal and clicks **SIMULATE**.
 5. ToolTwin runs the simulation engine:
    - Reads the digital twin (world state snapshot)
@@ -63,16 +63,16 @@ If simulation returns LOW risk with no policy violations, the system may allow t
 
 ### Pages
 
-| Page | Purpose |
-|------|---------|
-| **Login / Signup** | Supabase Auth. Role assigned at registration. |
-| **Dashboard** | Overview: pending actions count, recent decisions, risk heatmap, audit summary. |
-| **Action Console** | Operator workspace. Trigger LLM proposals, view proposal history, submit for review. |
+| Page                  | Purpose                                                                                                                       |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| **Login / Signup**    | Supabase Auth. Role assigned at registration.                                                                                 |
+| **Dashboard**         | Overview: pending actions count, recent decisions, risk heatmap, audit summary.                                               |
+| **Action Console**    | Operator workspace. Trigger LLM proposals, view proposal history, submit for review.                                          |
 | **Simulation Detail** | The heart of the product. Consequence graph visualization, risk score, policy violations, recommendations, decision controls. |
-| **Review Queue** | Approver workspace. List of actions awaiting decision, filterable by risk level. |
-| **Audit Log** | Auditor workspace. Full history with filters, export. |
-| **Policy Manager** | Define and manage business policies (retention, compliance, thresholds). |
-| **Tool Catalog** | View available tools, their schemas, and dependency mappings. |
+| **Review Queue**      | Approver workspace. List of actions awaiting decision, filterable by risk level.                                              |
+| **Audit Log**         | Auditor workspace. Full history with filters, export.                                                                         |
+| **Policy Manager**    | Define and manage business policies (retention, compliance, thresholds).                                                      |
+| **Tool Catalog**      | View available tools, their schemas, and dependency mappings.                                                                 |
 
 ### Key Components
 
@@ -120,11 +120,11 @@ If simulation returns LOW risk with no policy violations, the system may allow t
 
 To stay within Supabase free tier limits and because several pipeline stages always run together, the 11 stages are consolidated into 3 Edge Functions:
 
-| Function | Stages | Purpose |
-|----------|--------|---------|
-| **`agent-proxy`** | Stage 1 (Agent Action Proposal) | Receives tool catalog + context from client, calls OpenRouter, returns structured tool call proposal |
+| Function              | Stages                                        | Purpose                                                                                                                                                                      |
+| --------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`agent-proxy`**     | Stage 1 (Agent Action Proposal)               | Receives tool catalog + context from client, calls OpenRouter, returns structured tool call proposal                                                                         |
 | **`pipeline-engine`** | Stages 2-7 (Interpretation → Risk Assessment) | Parses tool call, snapshots world state, traverses dependency graph, simulates, evaluates policies, computes risk, generates alternatives. Single invocation per simulation. |
-| **`executor`** | Stages 8-11 (Decision → Audit Log) | Receives approved action, executes against Acme Commerce, verifies post-execution state, writes audit log |
+| **`executor`**        | Stages 8-11 (Decision → Audit Log)            | Receives approved action, executes against Acme Commerce, verifies post-execution state, writes audit log                                                                    |
 
 ### 11-Stage Pipeline
 
@@ -390,16 +390,16 @@ Total blast radius for delete_customer("CUS-10482"):
 
 Dependency rules (defined in `dependency_edges` and evaluated at simulation time):
 
-| Source | Relationship | Target | Delete Behavior |
-|--------|-------------|--------|-----------------|
-| Customer | one_to_many | Order | CASCADE (or FK violation) |
-| Order | one_to_many | Payment | CASCADE (or FK violation) |
-| Customer | one_to_many | Support Ticket | CASCADE (or FK violation) |
-| Customer | aggregate | Analytics: customer_ltv | CORRUPT |
-| Customer | aggregate | Analytics: churn_cohort | CORRUPT |
-| Customer | aggregate | Analytics: revenue_by_customer | CORRUPT |
-| Order | aggregate | Analytics: daily_revenue | CORRUPT |
-| Order | many_to_one | Inventory | SIDE_EFFECT (re-stock if cancelled) |
+| Source   | Relationship | Target                         | Delete Behavior                     |
+| -------- | ------------ | ------------------------------ | ----------------------------------- |
+| Customer | one_to_many  | Order                          | CASCADE (or FK violation)           |
+| Order    | one_to_many  | Payment                        | CASCADE (or FK violation)           |
+| Customer | one_to_many  | Support Ticket                 | CASCADE (or FK violation)           |
+| Customer | aggregate    | Analytics: customer_ltv        | CORRUPT                             |
+| Customer | aggregate    | Analytics: churn_cohort        | CORRUPT                             |
+| Customer | aggregate    | Analytics: revenue_by_customer | CORRUPT                             |
+| Order    | aggregate    | Analytics: daily_revenue       | CORRUPT                             |
+| Order    | many_to_one  | Inventory                      | SIDE_EFFECT (re-stock if cancelled) |
 
 ### Simulation Engine
 
@@ -428,6 +428,7 @@ The engine does NOT make policy or risk decisions — those are sequential steps
 Policies are declarative rules evaluated against the proposed action and simulation result.
 
 **Policy Schema:**
+
 ```json
 {
   "name": "Data Retention Policy",
@@ -456,13 +457,13 @@ Policies are declarative rules evaluated against the proposed action and simulat
 
 Risk is computed as a weighted score (0-100) from:
 
-| Factor | Weight | Description |
-|--------|--------|-------------|
-| Blast radius size | 25% | Number of directly + indirectly affected entities |
-| Entity criticality | 25% | Payment/financial entities weighted higher than logs |
-| Policy violations | 20% | Count × severity of policy violations |
-| Reversibility | 20% | Is the action reversible? Deletes are irreversible |
-| Data sensitivity | 10% | Does the entity contain PII or financial data? |
+| Factor             | Weight | Description                                          |
+| ------------------ | ------ | ---------------------------------------------------- |
+| Blast radius size  | 25%    | Number of directly + indirectly affected entities    |
+| Entity criticality | 25%    | Payment/financial entities weighted higher than logs |
+| Policy violations  | 20%    | Count × severity of policy violations                |
+| Reversibility      | 20%    | Is the action reversible? Deletes are irreversible   |
+| Data sensitivity   | 10%    | Does the entity contain PII or financial data?       |
 
 Risk bands: LOW (0-25), MEDIUM (26-50), HIGH (51-75), CRITICAL (76-100).
 
@@ -471,6 +472,7 @@ Risk bands: LOW (0-25), MEDIUM (26-50), HIGH (51-75), CRITICAL (76-100).
 The primary demo scenario walks through deleting an inactive customer:
 
 **Acme Commerce Seed Data for CUS-10482:**
+
 - Customer: Jane Morrison, CUS-10482, last active 2019-03-15 (6 years ago, not 5 — triggers retention policy)
 - 12 historical orders totaling $14,230 across 2017-2019
 - 12 corresponding payment records
@@ -478,6 +480,7 @@ The primary demo scenario walks through deleting an inactive customer:
 - Analytics aggregates include her data
 
 **Demo Flow:**
+
 1. Operator triggers LLM proposal. LLM proposes `delete_customer(customer_id="CUS-10482")` with reasoning "Customer has been inactive for over 5 years."
 2. Simulation reveals 12 orders, 12 payments, 8 tickets, 3 analytics aggregates affected. Risk: HIGH.
 3. Data Retention Policy fires: last activity was 6 years ago (< 7 year threshold) AND customer has orders. BLOCK.

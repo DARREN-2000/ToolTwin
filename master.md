@@ -16,18 +16,18 @@
 
 ### Color Palette
 
-| Role | Hex | CSS Variable |
-|------|-----|--------------|
-| Primary | `#0F172A` | `--color-primary` |
-| On Primary | `#FFFFFF` | `--color-on-primary` |
-| Secondary | `#1E293B` | `--color-secondary` |
-| Accent/CTA | `#22C55E` | `--color-accent` |
-| Background | `#020617` | `--color-background` |
-| Foreground | `#F8FAFC` | `--color-foreground` |
-| Muted | `#1A1E2F` | `--color-muted` |
-| Border | `#334155` | `--color-border` |
+| Role        | Hex       | CSS Variable          |
+| ----------- | --------- | --------------------- |
+| Primary     | `#0F172A` | `--color-primary`     |
+| On Primary  | `#FFFFFF` | `--color-on-primary`  |
+| Secondary   | `#1E293B` | `--color-secondary`   |
+| Accent/CTA  | `#22C55E` | `--color-accent`      |
+| Background  | `#020617` | `--color-background`  |
+| Foreground  | `#F8FAFC` | `--color-foreground`  |
+| Muted       | `#1A1E2F` | `--color-muted`       |
+| Border      | `#334155` | `--color-border`      |
 | Destructive | `#EF4444` | `--color-destructive` |
-| Ring | `#0F172A` | `--color-ring` |
+| Ring        | `#0F172A` | `--color-ring`        |
 
 **Color Notes:** Dark bg + green positive indicators
 
@@ -39,29 +39,30 @@
 - **Google Fonts:** [Plus Jakarta Sans + Plus Jakarta Sans](https://fonts.google.com/share?selection.family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400)
 
 **CSS Import:**
+
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap");
 ```
 
 ### Spacing Variables
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--space-xs` | `4px` / `0.25rem` | Tight gaps |
-| `--space-sm` | `8px` / `0.5rem` | Icon gaps, inline spacing |
-| `--space-md` | `16px` / `1rem` | Standard padding |
-| `--space-lg` | `24px` / `1.5rem` | Section padding |
-| `--space-xl` | `32px` / `2rem` | Large gaps |
-| `--space-2xl` | `48px` / `3rem` | Section margins |
-| `--space-3xl` | `64px` / `4rem` | Hero padding |
+| Token         | Value             | Usage                     |
+| ------------- | ----------------- | ------------------------- |
+| `--space-xs`  | `4px` / `0.25rem` | Tight gaps                |
+| `--space-sm`  | `8px` / `0.5rem`  | Icon gaps, inline spacing |
+| `--space-md`  | `16px` / `1rem`   | Standard padding          |
+| `--space-lg`  | `24px` / `1.5rem` | Section padding           |
+| `--space-xl`  | `32px` / `2rem`   | Large gaps                |
+| `--space-2xl` | `48px` / `3rem`   | Section margins           |
+| `--space-3xl` | `64px` / `4rem`   | Hero padding              |
 
 ### Shadow Depths
 
-| Level | Value | Usage |
-|-------|-------|-------|
-| `--shadow-sm` | `0 1px 2px rgba(0,0,0,0.05)` | Subtle lift |
-| `--shadow-md` | `0 4px 6px rgba(0,0,0,0.1)` | Cards, buttons |
-| `--shadow-lg` | `0 10px 15px rgba(0,0,0,0.1)` | Modals, dropdowns |
+| Level         | Value                          | Usage                       |
+| ------------- | ------------------------------ | --------------------------- |
+| `--shadow-sm` | `0 1px 2px rgba(0,0,0,0.05)`   | Subtle lift                 |
+| `--shadow-md` | `0 4px 6px rgba(0,0,0,0.1)`    | Cards, buttons              |
+| `--shadow-lg` | `0 10px 15px rgba(0,0,0,0.1)`  | Modals, dropdowns           |
 | `--shadow-xl` | `0 20px 25px rgba(0,0,0,0.15)` | Hero images, featured cards |
 
 ---
@@ -73,7 +74,7 @@
 ```css
 /* Primary Button */
 .btn-primary {
-  background: #22C55E;
+  background: #22c55e;
   color: white;
   padding: 12px 24px;
   border-radius: 8px;
@@ -90,8 +91,8 @@
 /* Secondary Button */
 .btn-secondary {
   background: transparent;
-  color: #0F172A;
-  border: 2px solid #0F172A;
+  color: #0f172a;
+  border: 2px solid #0f172a;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
@@ -123,16 +124,16 @@
 ```css
 .input {
   padding: 12px 16px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-size: 16px;
   transition: border-color 200ms ease;
 }
 
 .input:focus {
-  border-color: #0F172A;
+  border-color: #0f172a;
   outline: none;
-  box-shadow: 0 0 0 3px #0F172A20;
+  box-shadow: 0 0 0 3px #0f172a20;
 }
 ```
 
@@ -196,18 +197,21 @@
 ## Domain Guidelines — Game
 
 ### Core Loop & Player Psychology
+
 - Design a clear core loop: **Action → Feedback → Reward → Repeat**. Every interaction must complete this cycle.
 - Player input must produce visible feedback in < 100ms — button presses, attacks, jumps, clicks. Delay destroys game feel.
 - Reward at variable intervals, not every action. Variable ratio schedules (like slot machines) are the most engaging.
 - Always surface progress visibly: health bars, XP bars, score, timers. Players need to feel they're moving forward.
 
 ### Game Feel (Juice)
+
 - Add screen shake on impactful events (hits, explosions, deaths) — even 3–5px for 80–120ms is enough.
 - Scale interactive elements on press: buttons `scale(0.97)` on active, enemies `scale(1.05)` on hit.
 - Use particle effects purposefully on pickups, level-ups, and defeats — not decoratively.
 - Document audio intent even without implementation: distinct sounds for jump, collect, hit, death, win.
 
 ### HUD & Game UI
+
 - HUD belongs at screen edges — never center unless it is the primary score display.
 - Health/lives: top-left. Score/time: top-center or top-right.
 - Keep HUD minimal during play — fade in on pause or hover.
@@ -215,12 +219,14 @@
 - Pause overlays: dim the game world (rgba overlay) — keep it visible, don't cover with solid black.
 
 ### Progression & Rewards
+
 - Show what the player earned immediately and prominently after each achievement.
 - Level transitions are events: score tally animation, clear "Level X Complete" display, brief pause.
 - Increase difficulty gradually — never spike. If players die repeatedly in the same spot, reduce it subtly.
 - **Anti-patterns:** invisible progress, no checkpoints, input lag, unskippable cutscenes, punishing restarts.
 
 ### Flow State Design (Psychologist)
+
 - **Flow state**: Challenge must match skill level at all times. Too easy → boredom. Too hard → anxiety. The zone between them — where players lose track of time — is flow. Design every difficulty curve toward it.
 - **Variable rewards**: Variable ratio schedules (reward at unpredictable intervals) produce the highest and most persistent engagement. Make loot drops, critical hits, and rare events feel genuinely unpredictable — not on a hidden fixed timer.
 - **Intrinsic over extrinsic motivation**: Points and badges create short-term spikes that collapse when rewards stop. Design for mastery — the player should feel genuinely more skilled over time, not just numerically stronger. Autonomy (let them choose how to solve things) and purpose (choices that matter) sustain play long-term.
@@ -228,6 +234,7 @@
 - **Player-character attachment**: Players bond with characters through three things: consistency (the character behaves predictably), vulnerability (we see their fears and weaknesses), and agency (player choices visibly affect them).
 
 ### Narrative & Story Design (Narrative Designer)
+
 - The world tells the story first — use props, environmental details, lighting, and sound before dialogue or cutscenes. A burnt room with a child's toy says more than an NPC explaining what happened.
 - Tutorial content must be narratively motivated. A character teaches the player a mechanic because it makes story sense — not because the game needs a tutorial section.
 - **Branching choices must differ in kind, not degree.** "Fight" vs "Negotiate" is a real choice — different values, different consequences. "Attack now" vs "Attack later" is not a real choice. Every branch should represent a genuinely different approach.
@@ -252,7 +259,6 @@ Before delivering any UI code, verify:
 - [ ] No content hidden behind fixed navbars
 - [ ] No horizontal scroll on mobile
 
-
 ---
 
 ## User Preferences (authoritative)
@@ -268,13 +274,15 @@ These override any conflicting default above:
 These tokens are the rendering source of truth and are written into `src/index.css` for you. Build with them (`bg-primary`, `text-foreground`, `font-heading`, …); don't move or duplicate the `@import`/`@theme`.
 
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap");
 
 @theme {
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans:
+    "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading:
+    "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --color-primary: oklch(0.2077 0.0398 265.75);
-  --color-on-primary: oklch(1.0 0 0);
+  --color-on-primary: oklch(1 0 0);
   --color-secondary: oklch(0.2795 0.0368 260.03);
   --color-accent: oklch(0.7227 0.192 149.58);
   --color-background: oklch(0.1288 0.0406 264.7);

@@ -24,7 +24,7 @@ export default function LoginPage() {
       toast.error(err);
     } else {
       toast.success("Successfully signed in!");
-      navigate("/");
+      navigate("/app");
     }
   };
 
