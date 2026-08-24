@@ -15,6 +15,8 @@ import {
   Activity,
   Search,
   Puzzle,
+  Menu,
+  X,
 } from "lucide-react";
 
 const navItems = [
@@ -31,6 +33,7 @@ export default function Layout() {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
   const [cmdOpen, setCmdOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -132,8 +135,20 @@ export default function Layout() {
         </div>
       )}
 
+      {/* Mobile Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 bg-muted/50 border-r border-border flex flex-col shrink-0 relative">
+      <aside
+        className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-background md:bg-muted/50 border-r border-border flex flex-col shrink-0 transition-transform duration-300 ease-in-out md:translate-x-0 ${
+          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         <div className="p-5 border-b border-border">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -147,6 +162,12 @@ export default function Layout() {
                 <p className="text-xs text-foreground/50">AI Safety Layer</p>
               </div>
             </div>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-2 -mr-2 text-foreground/50 hover:text-foreground md:hidden"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
@@ -169,6 +190,7 @@ export default function Layout() {
             <NavLink
               key={item.to}
               to={item.to}
+              onClick={() => setMobileMenuOpen(false)}
               end={item.to === "/app"}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
@@ -209,8 +231,23 @@ export default function Layout() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto">
-        <Outlet />
+      <main className="flex-1 flex flex-col h-screen overflow-hidden w-full">
+        {/* Mobile Header */}
+        <div className="md:hidden flex-none flex items-center justify-between p-4 border-b border-border bg-background">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <Activity className="w-4 h-4 text-on-primary" />
+            </div>
+            <h1 className="text-lg font-heading font-bold text-foreground">ToolTwin</h1>
+          </div>
+          <button onClick={() => setMobileMenuOpen(true)} className="p-2 -mr-2 text-foreground/70 hover:text-foreground">
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

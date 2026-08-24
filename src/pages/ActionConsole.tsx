@@ -132,7 +132,7 @@ export default function ActionConsole() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-5rem)] max-w-5xl mx-auto border-x border-border/50 bg-background/50 relative">
+    <div className="flex flex-col h-full max-w-5xl mx-auto md:border-x border-border/50 bg-background/50 relative">
       <div className="flex-none p-4 border-b border-border/50 bg-background/80 backdrop-blur-sm z-10 sticky top-0">
         <div className="flex items-center gap-3">
           <Zap className="w-5 h-5 text-accent" />
