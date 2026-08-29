@@ -55,7 +55,7 @@ export const handler = async (req: Request) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "openai/gpt-4o",
+          model: Deno.env.get("LLM_MODEL") || "google/gemini-2.5-flash:free",
           messages: [
             {
               role: "system",
