@@ -50,48 +50,46 @@ export const handler = async (req: Request) => {
       severity: tool?.is_destructive ? "CRITICAL" : "LOW",
     });
 
-    // Dynamic BFS based purely on dependency_edges table
-    const visited = new Set([`${targetEntity}:${initialId}`]);
-    const queue = [{ type: targetEntity, id: initialId, depth: 0 }];
+    // Dynamic BFS based purely on dependency_edges table (now pushed to Postgres RPC!)
+    const { data: blastRadius, error: rpcError } = await supabase.rpc('get_blast_radius', {
+      start_entity: targetEntity,
+      max_depth: 3
+    });
 
-    while (queue.length > 0) {
-      const current = queue.shift();
-      if (!current || current.depth > 3) continue; // max depth
-
-      // Find dependent entities defined in the DB edges
-      const dependencies = (edges || []).filter(e => e.source_entity === current.type);
-
-      dependencies.forEach((dep, idx) => {
-        const dependentNodeId = `${dep.target_entity}_${current.id}_${idx}`;
-        
-        if (!visited.has(dependentNodeId)) {
-          visited.add(dependentNodeId);
-          
-          graphNodes.push({
-            id: dependentNodeId,
-            position: { x: 100 + (idx * 150), y: 150 + current.depth * 100 },
-            data: { label: `Dependent ${dep.target_entity}` },
-            style: { background: "#F97316", color: "white", borderRadius: "8px" },
-          });
-
-          graphEdges.push({
-            id: `e-${current.id}-${dependentNodeId}`,
-            source: current.id,
-            target: dependentNodeId,
-            animated: true,
-          });
-
-          affectedEntities.push({
-            type: dep.target_entity,
-            impact: "CASCADING_IMPACT",
-            severity: "HIGH",
-          });
-
-          riskScore += 15;
-          queue.push({ type: dep.target_entity, id: dependentNodeId, depth: current.depth + 1 });
-        }
-      });
+    if (rpcError) {
+      console.warn("RPC Failed, falling back to empty graph", rpcError);
     }
+
+    const dependencies = blastRadius || [];
+
+    dependencies.forEach((dep: any, idx: number) => {
+      const dependentNodeId = `${dep.target_entity}_${initialId}_${idx}`;
+      
+      graphNodes.push({
+        id: dependentNodeId,
+        position: { x: 100 + (idx * 150), y: 150 + dep.depth * 100 },
+        data: { label: `Dependent ${dep.target_entity}` },
+        style: { background: "#F97316", color: "white", borderRadius: "8px" },
+      });
+
+      // We don't have the exact source ID for intermediate nodes in this simplified view, 
+      // so we link back to the root for visualization purposes. A true graph would map 
+      // parent->child IDs precisely.
+      graphEdges.push({
+        id: `e-${initialId}-${dependentNodeId}`,
+        source: initialId,
+        target: dependentNodeId,
+        animated: true,
+      });
+
+      affectedEntities.push({
+        type: dep.target_entity,
+        impact: "CASCADING_IMPACT",
+        severity: "HIGH",
+      });
+
+      riskScore += 15;
+    });
 
     // Dynamic Policy Evaluation
     (policies || []).forEach(policy => {
