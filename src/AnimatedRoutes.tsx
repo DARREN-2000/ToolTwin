@@ -25,7 +25,7 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => (
     initial="initial"
     animate="animate"
     exit="exit"
-    variants={pageVariants}
+    variants={pageVariants as any}
     className="h-full w-full"
   >
     {children}

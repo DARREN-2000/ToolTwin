@@ -251,7 +251,7 @@ export default function SimulationDetail() {
                 <p className="text-base font-semibold text-white/90">{(selectedNode.data?.label as string) || "N/A"}</p>
               </div>
 
-              {selectedNode.data?.description && (
+              {Boolean(selectedNode.data?.description) && (
                 <div className="bg-white/5 border border-white/10 p-4 rounded-2xl hover:bg-white/10 transition-colors">
                   <p className="text-[10px] text-white/40 uppercase font-bold tracking-wider mb-2">Description</p>
                   <p className="text-sm text-white/70 leading-relaxed">
@@ -317,27 +317,93 @@ export default function SimulationDetail() {
               )}
             </div>
 
-            <div className="pt-6 mt-6">
+            <div className="pt-6 mt-6 space-y-3">
               <button
                 disabled={isSubmitting}
                 onClick={async () => {
                   setIsSubmitting(true);
-                  await new Promise((r) => setTimeout(r, 1200));
-                  toast.success("Pipeline executed successfully!", {
-                    style: { background: '#18181b', color: '#fff', border: '1px solid #27272a' }
-                  });
-                  setIsSubmitting(false);
-                  navigate("/review");
+                  try {
+                    // 1. Update proposal status to APPROVED
+                    if (id) {
+                      await supabase.from("action_proposals").update({ status: "APPROVED" }).eq("id", id);
+                    }
+
+                    // 2. Call the executor edge function
+                    const { data: execData, error: execError } = await supabase.functions.invoke("executor", {
+                      body: {
+                        action: "execute",
+                        proposal_id: id,
+                        tool_name: proposal?.tool_name,
+                        tool_params: proposal?.tool_params,
+                      },
+                    });
+
+                    // 3. Save execution result
+                    if (id) {
+                      await supabase.from("execution_results").insert({
+                        proposal_id: id,
+                        executed_action: { tool_name: proposal?.tool_name, tool_params: proposal?.tool_params },
+                        response: execData || { message: "Executed successfully" },
+                        verification_status: execError ? "DISCREPANCY" : "VERIFIED",
+                      });
+
+                      // 4. Update proposal to final status
+                      await supabase.from("action_proposals").update({
+                        status: execError ? "DISCREPANCY" : "VERIFIED",
+                      }).eq("id", id);
+
+                      // 5. Write audit log entry
+                      await supabase.from("audit_log").insert({
+                        proposal_id: id,
+                        event_type: "EXECUTED",
+                        event_data: {
+                          tool_name: proposal?.tool_name,
+                          tool_params: proposal?.tool_params,
+                          result: execData || {},
+                          verification: execError ? "DISCREPANCY" : "VERIFIED",
+                        },
+                      });
+                    }
+
+                    toast.success("Pipeline executed and verified!", {
+                      style: { background: '#18181b', color: '#fff', border: '1px solid #27272a' }
+                    });
+                    navigate("/app/audit");
+                  } catch (err) {
+                    console.error("Execution failed:", err);
+                    toast.error("Execution failed. Check audit log.");
+                  } finally {
+                    setIsSubmitting(false);
+                  }
                 }}
                 className={`w-full relative group overflow-hidden flex items-center justify-center gap-2 py-4 rounded-2xl font-bold transition-all ${
-                  isSubmitting ? "bg-white/10 text-white/50 cursor-wait" : "bg-white text-black hover:bg-gray-200 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+                  isSubmitting ? "bg-white/10 text-white/50 cursor-wait" : "bg-emerald-500 text-white hover:bg-emerald-400 hover:shadow-[0_0_30px_rgba(16,185,129,0.3)]"
                 }`}
               >
                 {!isSubmitting && <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-black/5 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />}
-                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Activity className="w-5 h-5" />}
+                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
                 <span className="relative z-10 tracking-wide uppercase text-sm">
-                  {isSubmitting ? "Processing..." : "Deploy Pipeline"}
+                  {isSubmitting ? "Executing..." : "Approve & Execute"}
                 </span>
+              </button>
+              <button
+                disabled={isSubmitting}
+                onClick={async () => {
+                  if (id) {
+                    await supabase.from("action_proposals").update({ status: "BLOCKED" }).eq("id", id);
+                    await supabase.from("audit_log").insert({
+                      proposal_id: id,
+                      event_type: "BLOCKED",
+                      event_data: { tool_name: proposal?.tool_name, tool_params: proposal?.tool_params, reason: "Human reviewer blocked this action." },
+                    });
+                  }
+                  toast.success("Action blocked.", { style: { background: '#18181b', color: '#fff', border: '1px solid #27272a' } });
+                  navigate("/app/review");
+                }}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-all"
+              >
+                <X className="w-5 h-5" />
+                <span className="tracking-wide uppercase text-sm">Block Action</span>
               </button>
             </div>
           </div>

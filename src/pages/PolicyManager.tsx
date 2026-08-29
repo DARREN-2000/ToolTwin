@@ -1,32 +1,58 @@
-import { ShieldCheck, Plus, AlertTriangle, AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ShieldCheck, Plus, AlertTriangle, AlertCircle, Loader2 } from "lucide-react";
+import { supabase } from "../lib/supabase";
+import toast from "react-hot-toast";
+
+interface Policy {
+  id: string;
+  name: string;
+  description: string;
+  rule_type: string;
+  severity: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
+  is_active: boolean;
+}
 
 export default function PolicyManager() {
-  const policies = [
-    {
-      id: "POL-101",
-      name: "Data Retention Policy",
-      description: "Preserve customer records for 7 years after last activity",
-      type: "retention",
-      severity: "CRITICAL",
-      active: true,
-    },
-    {
-      id: "POL-102",
-      name: "Financial Integrity Policy",
-      description: "Block actions that corrupt payment records",
-      type: "integrity",
-      severity: "CRITICAL",
-      active: true,
-    },
-    {
-      id: "POL-103",
-      name: "GDPR Compliance Policy",
-      description: "Recommend anonymization when blocking deletion",
-      type: "compliance",
-      severity: "MEDIUM",
-      active: true,
-    },
-  ];
+  const [policies, setPolicies] = useState<Policy[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPolicies();
+  }, []);
+
+  async function fetchPolicies() {
+    setLoading(true);
+    const { data, error } = await supabase.from("policies").select("*").order("name");
+    if (error) {
+      toast.error("Failed to load policies");
+      console.error(error);
+    } else {
+      setPolicies((data as Policy[]) || []);
+    }
+    setLoading(false);
+  }
+
+  const togglePolicy = async (id: string, currentStatus: boolean) => {
+    const { error } = await supabase
+      .from("policies")
+      .update({ is_active: !currentStatus })
+      .eq("id", id);
+    
+    if (error) {
+      toast.error("Failed to update policy status");
+    } else {
+      toast.success(`Policy ${!currentStatus ? 'activated' : 'deactivated'}`);
+      setPolicies(policies.map(p => p.id === id ? { ...p, is_active: !currentStatus } : p));
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="p-8 flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 max-w-5xl mx-auto space-y-6">
@@ -39,7 +65,10 @@ export default function PolicyManager() {
             Business rules applied during simulation.
           </p>
         </div>
-        <button className="flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 rounded-md text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer shadow-sm">
+        <button 
+          onClick={() => toast("New Policy creation coming soon!", { icon: "🚧" })}
+          className="flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 rounded-md text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer shadow-sm"
+        >
           <Plus className="w-4 h-4" /> New Policy
         </button>
       </div>
@@ -70,10 +99,16 @@ export default function PolicyManager() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border/50">
-              {policies.map((policy) => (
+              {policies.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-4 py-8 text-center text-foreground/50 text-sm">
+                    No policies defined.
+                  </td>
+                </tr>
+              ) : policies.map((policy) => (
                 <tr key={policy.id} className="group hover:bg-muted/40 transition-colors cursor-default">
                   <td className="px-4 py-2 text-[13px] font-mono text-foreground/60 group-hover:text-foreground/90 transition-colors">
-                    {policy.id}
+                    {policy.id.slice(0, 8)}…
                   </td>
                   <td className="px-4 py-2 text-[13px] font-medium text-foreground/90">
                     {policy.name}
@@ -82,7 +117,7 @@ export default function PolicyManager() {
                     {policy.description}
                   </td>
                   <td className="px-4 py-2 text-[13px] font-mono text-foreground/50">
-                    {policy.type}
+                    {policy.rule_type}
                   </td>
                   <td className="px-4 py-2">
                     <span
@@ -105,16 +140,17 @@ export default function PolicyManager() {
                   <td className="px-4 py-2 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <span className="text-[11px] font-medium text-foreground/50">
-                        {policy.active ? "ACTIVE" : "INACTIVE"}
+                        {policy.is_active ? "ACTIVE" : "INACTIVE"}
                       </span>
                       <button 
-                        className={`relative inline-flex h-4 w-7 items-center rounded-full transition-colors ${
-                          policy.active ? "bg-accent" : "bg-muted"
+                        onClick={() => togglePolicy(policy.id, policy.is_active)}
+                        className={`relative inline-flex h-4 w-7 items-center rounded-full transition-colors cursor-pointer ${
+                          policy.is_active ? "bg-accent" : "bg-muted border border-border"
                         }`}
                       >
                         <span 
                           className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
-                            policy.active ? "translate-x-3.5" : "translate-x-0.5"
+                            policy.is_active ? "translate-x-3.5" : "translate-x-0.5"
                           }`}
                         />
                       </button>

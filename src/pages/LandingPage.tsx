@@ -1,7 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 const LandingPage: React.FC = () => {
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
+
+  const handleDemoLogin = async () => {
+    await signIn("operator@tooltwin.demo", "Demo1234!");
+    navigate("/app/console");
+  };
+
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500/30 overflow-x-hidden">
       {/* Advanced SVG Glow Filter */}
@@ -24,15 +33,15 @@ const LandingPage: React.FC = () => {
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="text-xl font-bold tracking-tighter">CipherAI</div>
+          <div className="text-xl font-bold tracking-tighter">ToolTwin</div>
           <div className="hidden md:flex space-x-8 text-sm text-gray-400">
             <a href="#features" className="hover:text-white transition-colors">Features</a>
             <a href="#docs" className="hover:text-white transition-colors">Documentation</a>
             <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
           </div>
           <div className="flex space-x-4">
-            <button className="text-sm font-medium text-gray-300 hover:text-white transition">Sign In</button>
-            <button className="px-4 py-2 text-sm font-medium bg-white text-black rounded-full hover:bg-gray-200 transition">Get Started</button>
+            <button onClick={handleDemoLogin} className="text-sm font-medium text-gray-300 hover:text-white transition">Try Live Demo</button>
+            <Link to="/login" className="px-4 py-2 text-sm font-medium bg-white text-black rounded-full hover:bg-gray-200 transition">Login</Link>
           </div>
         </div>
       </nav>
@@ -45,29 +54,29 @@ const LandingPage: React.FC = () => {
         <div className="max-w-4xl mx-auto z-10 animate-fade-in-up">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 mb-8 text-sm text-gray-300">
             <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-            <span>CipherAI 2.0 is now available</span>
+            <span>ToolTwin MVP is now available</span>
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-tight">
-            The security layer for <br className="hidden md:block" />
+            The simulation layer for <br className="hidden md:block" />
             <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-[length:200%_auto] animate-gradient-x bg-clip-text text-transparent">
-              the AI era.
+              agentic workflows.
             </span>
           </h1>
 
           <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-            Prevent prompt injection, control data flows, and secure your agentic workflows—without slowing them down. Purpose-built for developers who prioritize both velocity and safety.
+            Prevent destructive actions, visualize consequence graphs, and secure your agentic systems. Test AI tools against a digital twin before execution.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <button className="px-8 py-3 rounded-full bg-white text-black font-semibold hover:bg-gray-200 transition shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-              Start building
+            <button onClick={handleDemoLogin} className="px-8 py-3 rounded-full bg-white text-black font-semibold hover:bg-gray-200 transition shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+              Try Live Demo
             </button>
             <button className="px-8 py-3 rounded-full border border-white/20 text-white font-medium hover:bg-white/5 transition flex items-center">
               <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
-              Read the docs
+              View Repository
             </button>
           </div>
         </div>
