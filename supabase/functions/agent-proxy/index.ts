@@ -60,26 +60,28 @@ export const handler = async (req: Request) => {
             {
               role: "system",
               content:
-                "You are an operations agent. Propose a tool call to fulfill the user request.",
+                "You are an operations agent. Propose a tool call to fulfill the user request. If you have no tools available, explain that to the user.",
             },
             {
               role: "user",
               content: actionContext,
             },
           ],
-          tools: tools.map((tool: any) =>
-            tool.inputSchema
-              ? {
-                  type: "function",
-                  function: {
-                    name: tool.name,
-                    description: tool.description,
-                    parameters: tool.inputSchema,
-                  },
-                }
-              : tool,
-          ),
-          tool_choice: "auto",
+          ...(tools && tools.length > 0 ? {
+            tools: tools.map((tool: any) =>
+              tool.inputSchema
+                ? {
+                    type: "function",
+                    function: {
+                      name: tool.name,
+                      description: tool.description,
+                      parameters: tool.inputSchema,
+                    },
+                  }
+                : tool,
+            ),
+            tool_choice: "auto",
+          } : {})
         }),
       },
     );
