@@ -28,66 +28,92 @@ export const handler = async (req: Request) => {
       });
     }
 
-    // Default to OpenRouter
-    const provider = "openrouter";
-    let apiUrl = "";
-    let apiKey = "";
-    let model = "";
-
-    if (provider === "nvidia") {
-      apiUrl = "https://integrate.api.nvidia.com/v1/chat/completions";
-      apiKey = Deno.env.get("NVIDIA_API_KEY") || "";
-      model = "nvidia/llama-3.1-nemotron-70b-instruct";
-    } else {
-      apiUrl = "https://openrouter.ai/api/v1/chat/completions";
-      apiKey = Deno.env.get("OPENROUTER_API_KEY") || "";
-      model = "google/gemini-2.5-flash:free";
-    }
-
-    if (!apiKey) {
-      return new Response(JSON.stringify({ error: "Server configuration error: API Key missing" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
+    // Advanced Fallback Router
+    const providers = [
+      {
+        name: "openrouter",
+        url: "https://openrouter.ai/api/v1/chat/completions",
+        key: Deno.env.get("OPENROUTER_API_KEY"),
+        model: "google/gemini-2.5-flash:free",
       },
-      body: JSON.stringify({
-        model: model,
-        messages: [
-          {
-            role: "system",
-            content: "You are an AI agent operations assistant. The user will ask you to perform an action. You must select the appropriate tool to perform the action and extract the required parameters. Do not execute the tool yourself; just return the tool call.",
-          },
-          { role: "user", content: actionContext },
-        ],
-        ...(tools && tools.length > 0 ? {
-          tools: tools.map((t: any) =>
-            t.function ? t : {
-              type: "function",
-              function: {
-                name: t.name,
-                description: t.description,
-                parameters: t.parameters,
-              },
-            }
-          ),
-          tool_choice: "auto",
-        } : {})
-      }),
-    });
+      {
+        name: "mistral",
+        url: "https://api.mistral.ai/v1/chat/completions",
+        key: Deno.env.get("MISTRAL_API_KEY"),
+        model: "mistral-large-latest",
+      },
+      {
+        name: "nvidia",
+        url: "https://integrate.api.nvidia.com/v1/chat/completions",
+        key: Deno.env.get("NVIDIA_API_KEY"),
+        model: "nvidia/llama-3.1-nemotron-70b-instruct",
+      }
+    ];
 
-    if (!response.ok) {
-      throw new Error(`LLM API error: ${response.status} ${response.statusText}`);
+    let lastError = "No valid providers configured";
+    let successData = null;
+    let successfulProvider = null;
+
+    const requestPayload = {
+      messages: [
+        {
+          role: "system",
+          content: "You are an AI agent operations assistant. The user will ask you to perform an action. You must select the appropriate tool to perform the action and extract the required parameters. Do not execute the tool yourself; just return the tool call.",
+        },
+        { role: "user", content: actionContext },
+      ],
+      ...(tools && tools.length > 0 ? {
+        tools: tools.map((t: any) =>
+          t.function ? t : {
+            type: "function",
+            function: {
+              name: t.name,
+              description: t.description,
+              parameters: t.parameters,
+            },
+          }
+        ),
+        tool_choice: "auto",
+      } : {})
+    };
+
+    for (const p of providers) {
+      if (!p.key) continue;
+
+      try {
+        const response = await fetch(p.url, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${p.key}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...requestPayload,
+            model: p.model,
+          }),
+        });
+
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(`${p.name} returned ${response.status}: ${errText}`);
+        }
+
+        successData = await response.json();
+        successfulProvider = p.name;
+        console.log(`Successfully routed via ${p.name}`);
+        break; // Stop trying if successful
+      } catch (err: any) {
+        console.warn(`Provider ${p.name} failed:`, err.message);
+        lastError = err.message;
+        // Continue to next provider
+      }
     }
 
-    const data = await response.json();
-    return new Response(JSON.stringify(data), {
+    if (!successData) {
+      throw new Error(`All LLM providers failed. Last error: ${lastError}`);
+    }
+
+    return new Response(JSON.stringify(successData), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
