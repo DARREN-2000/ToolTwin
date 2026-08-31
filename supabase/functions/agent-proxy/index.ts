@@ -34,7 +34,7 @@ export const handler = async (req: Request) => {
         name: "openrouter",
         url: "https://openrouter.ai/api/v1/chat/completions",
         key: Deno.env.get("OPENROUTER_API_KEY"),
-        model: "google/gemini-2.5-flash:free",
+        model: "google/gemini-2.5-flash",
       },
       {
         name: "mistral",
@@ -55,6 +55,7 @@ export const handler = async (req: Request) => {
     let successfulProvider = null;
 
     const requestPayload = {
+      max_tokens: 1000,
       messages: [
         {
           role: "system",
