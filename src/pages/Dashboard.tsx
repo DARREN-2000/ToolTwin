@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, Activity, Zap, ShieldAlert, CheckCircle2, XCircle, ScrollText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import OnboardingModal from '../components/OnboardingModal';
+import TerminalSimulator from '../components/TerminalSimulator';
 import { supabase } from '../lib/supabase';
 
 export default function Dashboard() {
@@ -71,6 +72,25 @@ export default function Dashboard() {
             </button>
           </div>
         </header>
+
+        {/* INTERACTIVE DEMO SPLIT SCREEN */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="h-[400px]">
+            <TerminalSimulator />
+          </div>
+          <div className="bg-[#111111] border border-white/10 rounded-xl p-8 flex flex-col justify-center items-start shadow-sm relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-3xl rounded-full translate-x-12 -translate-y-12 pointer-events-none" />
+             <h2 className="text-2xl font-bold text-white mb-4">How it works behind the scenes</h2>
+             <p className="text-gray-400 leading-relaxed mb-6">
+               When you click <strong>Start Python Agent</strong> on the left, you simulate a real-world developer's environment where an AI attempts to execute a dangerous AWS command.
+               <br/><br/>
+               Notice how the AI agent is <strong>physically paused</strong> by the SDK. It cannot continue until you—the human operator—navigate to the <button onClick={() => navigate("/app/console")} className="text-primary hover:underline font-semibold">Action Console</button> or Review Queue to approve the request.
+             </p>
+             <button onClick={() => navigate("/app/console")} className="bg-white text-black px-5 py-2.5 rounded-md font-medium hover:bg-gray-200 transition-colors">
+               Try the Action Console →
+             </button>
+          </div>
+        </div>
 
         {/* Metric Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

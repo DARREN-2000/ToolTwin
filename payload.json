@@ -1,0 +1,1 @@
+{"tool_name":"terminate_ec2_instance","tool_params":{"instance_id":"i-1234567890abcdef0"},"proposal_id":"mock-123"}
