@@ -3,6 +3,7 @@ import { Zap, Play, Loader2, Send, Bot, User, Command } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useAuth } from "../hooks/useAuth";
 
 type Message = {
   id: string;
@@ -12,6 +13,7 @@ type Message = {
 };
 
 export default function ActionConsole() {
+  const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "init",
