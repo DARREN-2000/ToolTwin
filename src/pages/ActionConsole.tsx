@@ -93,11 +93,11 @@ export default function ActionConsole() {
         {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content: "The user requested the deletion of a customer. I have prepared the tool execution.",
+          content: "The user requested the termination of an EC2 instance. I have prepared the tool execution.",
           proposal: {
-            tool_name: "delete_customer",
-            tool_params: { customer_id: "CUS-10482" },
-            llm_reasoning: "The user requested the deletion of customer CUS-10482. Selecting delete_customer tool to begin the process.",
+            tool_name: "terminate_ec2_instance",
+            tool_params: { instance_id: "i-123456789" },
+            llm_reasoning: "The user requested the termination of an EC2 instance. Selecting terminate_ec2_instance tool to begin the process.",
           }
         }
       ]);

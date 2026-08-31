@@ -1,0 +1,1 @@
+{"actionContext":"terminate ec2 instance","tools":[{"name":"terminate_ec2_instance","description":"test","parameters":{}}]}

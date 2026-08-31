@@ -28,8 +28,8 @@ export const handler = async (req: Request) => {
       });
     }
 
-    // Default to NVIDIA NIM (Llama 3.1 70B)
-    const provider = "nvidia";
+    // Default to OpenRouter
+    const provider = "openrouter";
     let apiUrl = "";
     let apiKey = "";
     let model = "";
@@ -37,7 +37,7 @@ export const handler = async (req: Request) => {
     if (provider === "nvidia") {
       apiUrl = "https://integrate.api.nvidia.com/v1/chat/completions";
       apiKey = Deno.env.get("NVIDIA_API_KEY") || "";
-      model = "meta/llama-3.1-70b-instruct";
+      model = "nvidia/llama-3.1-nemotron-70b-instruct";
     } else {
       apiUrl = "https://openrouter.ai/api/v1/chat/completions";
       apiKey = Deno.env.get("OPENROUTER_API_KEY") || "";
