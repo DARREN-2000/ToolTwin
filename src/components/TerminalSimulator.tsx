@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Terminal, Lock, Play, RefreshCw, Server, AlertCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Terminal, Lock, Play, RefreshCw, Server } from 'lucide-react';
 
 export default function TerminalSimulator() {
   const [step, setStep] = useState(0);

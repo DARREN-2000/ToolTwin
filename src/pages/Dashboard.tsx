@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowUpRight, Activity, Zap, ShieldAlert, CheckCircle2, XCircle, ScrollText } from 'lucide-react';
+import { Activity, Zap, ShieldAlert, CheckCircle2, XCircle, ScrollText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import OnboardingModal from '../components/OnboardingModal';
 import TerminalSimulator from '../components/TerminalSimulator';

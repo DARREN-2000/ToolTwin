@@ -9,7 +9,6 @@ import {
   ClipboardList,
   ShieldCheck,
   ScrollText,
-  FileText,
   Wrench,
   LogOut,
   Activity,
