@@ -115,6 +115,7 @@ export default function ActionConsole() {
           tool_params: proposal.tool_params,
           llm_reasoning: proposal.llm_reasoning,
           status: "PROPOSED",
+          proposed_by: user?.id || "mock-123",
         })
         .select()
         .single();

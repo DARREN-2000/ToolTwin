@@ -2,6 +2,7 @@
 
 CREATE OR REPLACE FUNCTION get_blast_radius(
   start_entity text,
+  tenant_id text,
   max_depth integer DEFAULT 3
 )
 RETURNS TABLE (
@@ -21,7 +22,7 @@ AS $$
       e.relationship_type,
       1 AS depth
     FROM public.dependency_edges e
-    WHERE e.source_entity = start_entity
+    WHERE e.source_entity = start_entity AND e.user_id = tenant_id
     
     UNION ALL
     
@@ -33,7 +34,7 @@ AS $$
       dt.depth + 1
     FROM public.dependency_edges e
     INNER JOIN dependency_tree dt ON e.source_entity = dt.target_entity
-    WHERE dt.depth < max_depth
+    WHERE dt.depth < max_depth AND e.user_id = tenant_id
   )
   SELECT DISTINCT * FROM dependency_tree;
 $$;
