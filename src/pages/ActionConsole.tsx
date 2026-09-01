@@ -154,7 +154,7 @@ export default function ActionConsole() {
             }`}
           >
             <div className={`flex-none w-8 h-8 rounded-full flex items-center justify-center shadow-sm ${
-              msg.role === "user" ? "bg-primary text-on-primary" : "bg-accent text-accent-foreground"
+              msg.role === "user" ? "bg-primary text-white" : "bg-accent text-accent-foreground"
             }`}>
               {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
             </div>
@@ -162,7 +162,7 @@ export default function ActionConsole() {
             <div className="space-y-3 min-w-0">
               <div className={`px-5 py-3.5 rounded-2xl text-sm leading-relaxed ${
                 msg.role === "user" 
-                  ? "bg-primary text-on-primary rounded-tr-sm" 
+                  ? "bg-primary text-white rounded-tr-sm" 
                   : "bg-card border border-border shadow-sm rounded-tl-sm text-card-foreground"
               }`}>
                 {msg.content}
@@ -242,13 +242,13 @@ export default function ActionConsole() {
               }
             }}
             placeholder="Describe the action you want to perform..."
-            className="w-full max-h-32 min-h-[44px] bg-transparent resize-none outline-none px-3 py-2.5 text-sm"
+            className="w-full max-h-32 min-h-[44px] bg-transparent resize-none outline-none px-3 py-2.5 text-sm text-foreground"
             rows={1}
           />
           <button
             onClick={handleSend}
             disabled={!input.trim() || isTyping}
-            className="flex-none w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center disabled:opacity-50 hover:opacity-90 transition-opacity mb-0.5"
+            className="flex-none w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center disabled:opacity-50 hover:opacity-90 transition-opacity mb-0.5"
           >
             <Send className="w-4 h-4 ml-0.5" />
           </button>
