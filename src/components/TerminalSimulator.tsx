@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Terminal, Lock, Play, RefreshCw, Server } from 'lucide-react';
+import { Terminal, Lock, Play, RefreshCw, Server, CheckCircle2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export default function TerminalSimulator() {
   const [step, setStep] = useState(0);
   const [typing, setTyping] = useState(false);
+  const [isApproved, setIsApproved] = useState(false);
 
   const script = [
     { text: "Initializing AI Agent Agent-Alpha...", delay: 500, type: "info" },
@@ -22,7 +24,6 @@ export default function TerminalSimulator() {
     if (step === 0) return;
     
     let isCancelled = false;
-    let currentStep = 0;
     
     const runScript = async () => {
       setTyping(true);
@@ -33,15 +34,43 @@ export default function TerminalSimulator() {
         await new Promise(resolve => setTimeout(resolve, line.delay));
         if (isCancelled) return;
         setLines(prev => [...prev, line]);
-        currentStep++;
       }
       setTyping(false);
     };
 
     runScript();
 
-    return () => { isCancelled = true; };
+    // Listen for live approvals from the dashboard
+    const channel = supabase
+      .channel('live-demo-approvals')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'action_proposals' }, (payload) => {
+        if (payload.new.status === 'APPROVED' || payload.new.status === 'EXECUTED') {
+          setIsApproved(true);
+        }
+      })
+      .subscribe();
+
+    return () => {
+      isCancelled = true;
+      supabase.removeChannel(channel);
+    };
   }, [step]);
+
+  useEffect(() => {
+    if (isApproved && !typing && lines.length > 0) {
+      setTyping(true);
+      setTimeout(() => {
+        setLines(prev => [...prev, { text: "[APPROVED] ToolTwin authorization granted remotely.", type: "success" }]);
+        setTimeout(() => {
+          setLines(prev => [...prev, { text: "Executing tool 'terminate_ec2_instance'...", type: "command" }]);
+          setTimeout(() => {
+            setLines(prev => [...prev, { text: "Execution Success! Agent resuming normal operations.", type: "info" }]);
+            setTyping(false);
+          }, 800);
+        }, 800);
+      }, 500);
+    }
+  }, [isApproved, typing, lines.length]);
 
   return (
     <div className="bg-[#0a0a0a] border border-[#222] rounded-xl overflow-hidden shadow-2xl flex flex-col h-full font-mono text-[13px]">
@@ -80,6 +109,7 @@ export default function TerminalSimulator() {
                 ${line.type === 'command' ? 'text-blue-400' : ''}
                 ${line.type === 'warning' ? 'text-yellow-400' : ''}
                 ${line.type === 'error' ? 'text-red-400 font-bold bg-red-500/10 px-2 py-1 rounded border border-red-500/20 inline-block' : ''}
+                ${line.type === 'success' ? 'text-emerald-400 font-bold bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20 inline-block' : ''}
               `}>
                 <span className="text-gray-600 mr-2">{'>'}</span> 
                 {line.text}
@@ -92,7 +122,7 @@ export default function TerminalSimulator() {
               </div>
             )}
             
-            {!typing && lines.length > 0 && (
+            {!typing && lines.length > 0 && !isApproved && (
               <div className="mt-6 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-md flex items-start gap-3">
                 <Lock className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
                 <div>
