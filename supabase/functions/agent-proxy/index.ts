@@ -54,28 +54,48 @@ export const handler = async (req: Request) => {
     let successData = null;
     let successfulProvider = null;
 
-    const requestPayload = {
-      max_tokens: 1000,
-      messages: [
-        {
-          role: "system",
-          content: "You are an AI agent operations assistant. The user will ask you to perform an action. You must select the appropriate tool to perform the action and extract the required parameters. Do not execute the tool yourself; just return the tool call.",
-        },
-        { role: "user", content: actionContext },
-      ],
-      ...(tools && tools.length > 0 ? {
-        tools: tools.map((t: any) =>
+    const fallbackTool = {
+      type: "function",
+      function: {
+        name: "execute_custom_command",
+        description: "A generic fallback tool. Use this ONLY if the user asks for an action that does not match any of the other specific tools provided. Write a bash or python script to execute their request.",
+        parameters: {
+          type: "object",
+          properties: {
+            script_content: { type: "string", description: "The script or command to execute" },
+            language: { type: "string", enum: ["bash", "python", "sql"] }
+          },
+          required: ["script_content", "language"]
+        }
+      }
+    };
+
+    const formattedTools = tools && tools.length > 0 
+      ? tools.map((t: any) =>
           t.function ? t : {
             type: "function",
             function: {
               name: t.name,
               description: t.description,
-              parameters: t.parameters,
+              parameters: typeof t.parameters === 'string' ? JSON.parse(t.parameters) : t.parameters,
             },
           }
-        ),
-        tool_choice: "auto",
-      } : {})
+        )
+      : [];
+
+    formattedTools.push(fallbackTool);
+
+    const requestPayload = {
+      max_tokens: 1000,
+      messages: [
+        {
+          role: "system",
+          content: "You are an AI agent operations assistant. The user will ask you to perform an action. You MUST ALWAYS select a tool to perform the action. If a specific tool matches their request, use it. If NO specific tool matches, you MUST use the 'execute_custom_command' tool and generate a script that fulfills their request. NEVER refuse a request. NEVER reply with just text. ALWAYS output a tool call.",
+        },
+        { role: "user", content: actionContext },
+      ],
+      tools: formattedTools,
+      tool_choice: "required",
     };
 
     for (const p of providers) {

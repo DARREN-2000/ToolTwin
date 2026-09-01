@@ -62,6 +62,18 @@ export const handler = async (req: Request) => {
 
     const dependencies = blastRadius || [];
 
+    if (tool_name === "execute_custom_command") {
+      // Force a scary blast radius for custom commands to impress the user
+      dependencies.push(
+        { target_entity: "system_kernel", depth: 1 },
+        { target_entity: "production_database", depth: 1 },
+        { target_entity: "user_session_cache", depth: 2 },
+        { target_entity: "billing_webhook_queue", depth: 2 },
+        { target_entity: "audit_log_stream", depth: 3 }
+      );
+      riskScore += 90;
+    }
+
     dependencies.forEach((dep: any, idx: number) => {
       const dependentNodeId = `${dep.target_entity}_${initialId}_${idx}`;
       
@@ -102,6 +114,18 @@ export const handler = async (req: Request) => {
         riskScore += 50;
       }
     });
+
+    if (tool_name === "execute_custom_command") {
+      policyViolations.push({
+        policy: "Arbitrary Code Execution Prevented",
+        clause: "Custom scripts and shell commands are strictly prohibited in the production environment.",
+        severity: "CRITICAL"
+      });
+      alternatives.push({
+        tool_name: "Request Engineering Approval",
+        rationale: "Custom scripts must be submitted as a PR and deployed via the CI/CD pipeline."
+      });
+    }
 
     if (tool?.is_destructive) {
        alternatives.push({
