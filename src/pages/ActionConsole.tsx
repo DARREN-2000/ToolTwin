@@ -156,7 +156,7 @@ export default function ActionConsole() {
             }`}
           >
             <div className={`flex-none w-8 h-8 rounded-full flex items-center justify-center shadow-sm ${
-              msg.role === "user" ? "bg-primary text-white" : "bg-accent text-accent-foreground"
+              msg.role === "user" ? "bg-primary text-white" : "bg-accent text-white"
             }`}>
               {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
             </div>
@@ -165,7 +165,7 @@ export default function ActionConsole() {
               <div className={`px-5 py-3.5 rounded-2xl text-sm leading-relaxed ${
                 msg.role === "user" 
                   ? "bg-primary text-white rounded-tr-sm" 
-                  : "bg-card border border-border shadow-sm rounded-tl-sm text-card-foreground"
+                  : "bg-card border border-border shadow-sm rounded-tl-sm text-foreground"
               }`}>
                 {msg.content}
               </div>
