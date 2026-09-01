@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Zap, Play, Loader2, Send, Bot, User, Command } from "lucide-react";
+import { Zap, Play, Loader2, Send, Bot, User, Command, Server, CheckCircle2 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -135,8 +135,10 @@ export default function ActionConsole() {
   };
 
   return (
-    <div className="flex flex-col h-full max-w-5xl mx-auto md:border-x border-border/50 bg-background/50 relative">
-      <div className="flex-none p-4 border-b border-border/50 bg-background/80 backdrop-blur-sm z-10 sticky top-0">
+    <div className="lg:grid lg:grid-cols-12 h-[calc(100vh-theme(spacing.16))] bg-background">
+      {/* Main Chat Area */}
+      <div className="flex flex-col h-full lg:col-span-8 relative border-r border-border/50">
+        <div className="flex-none p-4 border-b border-border/50 bg-background/80 backdrop-blur-sm z-10 sticky top-0">
         <div className="flex items-center gap-3">
           <Zap className="w-5 h-5 text-accent" />
           <h1 className="text-xl font-heading font-bold text-foreground">
@@ -256,6 +258,51 @@ export default function ActionConsole() {
         <p className="text-center text-xs text-muted-foreground mt-2">
           Press Enter to send, Shift + Enter for new line. Proposals are simulations and will not execute immediately.
         </p>
+      </div>
+      </div>
+
+      {/* Developer Inspector Panel */}
+      <div className="hidden lg:flex lg:col-span-4 flex-col bg-[#0a0a0a]">
+        <div className="flex-none h-[72px] border-b border-[#222] flex items-center px-6">
+          <div className="flex items-center gap-2">
+            <Server className="w-4 h-4 text-accent" />
+            <h2 className="font-semibold text-sm text-gray-200">Agent Inspector</h2>
+          </div>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 text-sm">
+          <div className="bg-[#111] border border-[#222] rounded-xl p-5 space-y-3">
+            <h3 className="font-semibold text-gray-300 flex items-center gap-2">
+              <Zap className="w-4 h-4 text-accent" />
+              How ToolTwin Works
+            </h3>
+            <p className="text-gray-400 leading-relaxed text-xs">
+              When you chat with the agent, ToolTwin sits between the AI and your infrastructure. 
+              The AI never executes code directly. Instead, it generates a <span className="text-blue-400 font-mono bg-blue-400/10 px-1 py-0.5 rounded">tool_call</span> which ToolTwin intercepts, 
+              evaluates for blast-radius, and holds in a queue for human approval.
+            </p>
+          </div>
+
+          {messages.filter(m => m.proposal).length > 0 ? (
+            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
+              <h3 className="font-semibold text-gray-300">Intercepted API Payload</h3>
+              <div className="bg-black border border-[#222] rounded-xl overflow-hidden font-mono text-xs shadow-xl">
+                <div className="bg-[#1a1a1a] px-4 py-2 border-b border-[#333] flex justify-between text-gray-400">
+                  <span>POST /api/proposals</span>
+                  <span className="text-emerald-400 flex items-center gap-1"><CheckCircle2 className="w-3 h-3"/> 201 Created</span>
+                </div>
+                <div className="p-4 text-gray-300 overflow-x-auto">
+                  <pre>{JSON.stringify(messages.filter(m => m.proposal).pop()?.proposal, null, 2)}</pre>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center text-center p-8 border border-dashed border-[#333] rounded-xl opacity-50 mt-10">
+              <Command className="w-8 h-8 mb-3 text-gray-500" />
+              <p className="text-gray-400">Waiting for agent to generate a tool payload...</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
