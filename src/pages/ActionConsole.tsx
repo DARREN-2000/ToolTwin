@@ -232,7 +232,30 @@ export default function ActionConsole() {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="flex-none p-4 bg-background">
+      <div className="flex-none p-4 bg-background border-t border-border/50">
+        <div className="max-w-3xl mx-auto mb-3 flex flex-wrap gap-2">
+          <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider flex items-center mr-2">
+            Try asking:
+          </span>
+          <button 
+            onClick={() => setInput("Terminate the production EC2 instance i-0abcd1234")}
+            className="text-xs bg-accent/10 hover:bg-accent/20 text-accent border border-accent/20 px-3 py-1.5 rounded-full transition-colors"
+          >
+            "Terminate an EC2 instance"
+          </button>
+          <button 
+            onClick={() => setInput("Delete the customer account for user mock-123")}
+            className="text-xs bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 px-3 py-1.5 rounded-full transition-colors"
+          >
+            "Delete a customer account"
+          </button>
+          <button 
+            onClick={() => setInput("Cancel the Stripe subscription for sub_456")}
+            className="text-xs bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 px-3 py-1.5 rounded-full transition-colors"
+          >
+            "Cancel a subscription"
+          </button>
+        </div>
         <div className="relative max-w-3xl mx-auto flex items-end gap-2 bg-card border border-border shadow-sm rounded-2xl p-2 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
           <textarea
             value={input}
